@@ -53,6 +53,8 @@ Choose Menu: `)
 		switch menuSelection {
 		case 1:
 			a.userHandler.Create()
+		case 2:
+			a.userHandler.List()
 		case 0:
 			exitApp = true
 		default:
