@@ -16,8 +16,9 @@ type userHandler struct {
 	reader *bufio.Reader
 }
 
-func NewUserHandler(reader *bufio.Reader) domain.UserHandler {
+func NewUserHandler(uc domain.UserUsecase, reader *bufio.Reader) domain.UserHandler {
 	return &userHandler{
+		uc:     uc,
 		reader: reader,
 	}
 }
@@ -25,7 +26,9 @@ func NewUserHandler(reader *bufio.Reader) domain.UserHandler {
 func (h *userHandler) Create() {
 	for {
 		fmt.Println("\n\033[0;33m========== ADD NEW MEMBER ==========\033[0m")
-		fmt.Print("Email: ")
+
+		// ======== EMAIL ========
+		fmt.Printf("\n%-10s: ", "Email")
 		emailInput, err := h.reader.ReadString('\n')
 		if err != nil {
 			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
@@ -43,28 +46,57 @@ func (h *userHandler) Create() {
 			continue
 		}
 
+		// ======== PASSWORD ========
+		fmt.Printf("%-10s: ", "Password")
+		passwordInput, err := h.reader.ReadString('\n')
+		password := strings.TrimSpace(passwordInput)
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+
+		// ======== FIRSTNAME ========
+		fmt.Printf("%-10s: ", "First Name")
+		firstNameInput, err := h.reader.ReadString('\n')
+		firstName := strings.TrimSpace(firstNameInput)
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+
+		// ======== LASTNAME ========
+		fmt.Printf("%-10s: ", "Last Name")
+		lastNameInput, err := h.reader.ReadString('\n')
+		lastName := strings.TrimSpace(lastNameInput)
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+
+		// ======== MEMBER TIER ========
 		var tier string
+		var memberTierId int
 		for {
 			// TODO: PRINT TIERS DYNAMICALLY
-			fmt.Printf(`Tiers:
+			fmt.Printf(`
+Tiers:
 1. Gold
 2. Silver
 3. Bronze	
-				
 Select tier: `)
 			tierInput, err := h.reader.ReadString('\n')
 			if err != nil {
 				fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
 				continue
 			}
-			tierSelection, err := strconv.Atoi(strings.TrimSpace(tierInput))
+			memberTierId, err = strconv.Atoi(strings.TrimSpace(tierInput))
 			if err != nil {
 				fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
 				fmt.Printf("Email: %s\n", email)
 				continue
 			}
 
-			switch tierSelection {
+			switch memberTierId {
 			case 1:
 				tier = "Gold"
 			case 2:
@@ -73,13 +105,28 @@ Select tier: `)
 				tier = "Bronze"
 			default:
 				fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
-				fmt.Printf("Email: %s\n", email)
 				continue
 			}
 			break
 		}
 
+		// ======== ADDRESS ========
+		fmt.Printf("%-10s: ", "Address")
+		addressInput, err := h.reader.ReadString('\n')
+		address := strings.TrimSpace(addressInput)
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+
 		// TODO: ADD INSERT USER
+
+		err = h.uc.Create(email, password, firstName, lastName, address, memberTierId)
+		if err != nil {
+			fmt.Println("\n\033[0;31m", err, "\033[0m")
+			return
+		}
+
 		fmt.Println("\n\033[0;32mNew Member added.\033[0m")
 		fmt.Println("Email:", email)
 		fmt.Println("Tier:", tier)

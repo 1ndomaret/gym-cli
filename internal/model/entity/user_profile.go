@@ -10,5 +10,5 @@ type UserProfile struct {
 	LastName      string
 	Address       string
 	CreatedAt     time.Time
-	Status        string
+	Status        bool
 }

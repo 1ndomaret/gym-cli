@@ -8,19 +8,19 @@ import (
 	"strings"
 )
 
-type Menu struct {
+type menu struct {
 	userHandler domain.UserHandler
 	reader      *bufio.Reader
 }
 
-func NewMenu(uh domain.UserHandler, reader *bufio.Reader) *Menu {
-	return &Menu{
+func NewMenu(uh domain.UserHandler, reader *bufio.Reader) *menu {
+	return &menu{
 		userHandler: uh,
 		reader:      reader,
 	}
 }
 
-func (a *Menu) Run() {
+func (a *menu) Run() {
 
 	for {
 		fmt.Println("\033[0;33m========================================")
