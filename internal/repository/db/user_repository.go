@@ -66,3 +66,43 @@ func (r *userRepository) Create(ctx context.Context, user *entity.User, userProf
 
 	return nil
 }
+
+func (r *userRepository) MemberList(ctx context.Context) ([]entity.UserDetail, error) {
+	query := `
+		SELECT u.Email, up.FirstName, up.LastName, 
+			t.TierName, up.Address, up.CreatedAt, up.Status
+			FROM UserProfiles up
+			JOIN Users u ON u.UserId = up.UserId
+			JOIN Tiers t ON t.TierId = up.MemberTierId
+			WHERE u.Type = "member"
+			ORDER BY up.CreatedAt ASC
+	`
+	rows, err := r.db.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var userDetails []entity.UserDetail
+	for rows.Next() {
+		var userDetail entity.UserDetail
+		err := rows.Scan(
+			&userDetail.Email,
+			&userDetail.FirstName,
+			&userDetail.LastName,
+			&userDetail.TierName,
+			&userDetail.Address,
+			&userDetail.CreatedAt,
+			&userDetail.Status,
+		)
+		if err != nil {
+			return nil, err
+		}
+		userDetails = append(userDetails, userDetail)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return userDetails, nil
+}

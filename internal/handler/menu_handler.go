@@ -68,7 +68,7 @@ Choose Menu: `)
 		}
 
 		if exitApp {
-			fmt.Println("Exiting Application.")
+			fmt.Println("\033[0;33mExiting Application.")
 			break
 		}
 	}
