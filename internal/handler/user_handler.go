@@ -4,11 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"gym-cli/internal/domain"
-	"gym-cli/internal/model/entity"
 	"net/mail"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type userHandler struct {
@@ -28,7 +26,7 @@ func (h *userHandler) Create() {
 		fmt.Println("\n\033[0;33m========== ADD NEW MEMBER ==========\033[0m")
 
 		// ======== EMAIL ========
-		fmt.Printf("\n%-10s: ", "Email")
+		fmt.Printf("%-15s: ", "Email")
 		emailInput, err := h.reader.ReadString('\n')
 		if err != nil {
 			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
@@ -47,7 +45,7 @@ func (h *userHandler) Create() {
 		}
 
 		// ======== PASSWORD ========
-		fmt.Printf("%-10s: ", "Password")
+		fmt.Printf("%-15s: ", "Password")
 		passwordInput, err := h.reader.ReadString('\n')
 		password := strings.TrimSpace(passwordInput)
 		if err != nil {
@@ -56,7 +54,7 @@ func (h *userHandler) Create() {
 		}
 
 		// ======== FIRSTNAME ========
-		fmt.Printf("%-10s: ", "First Name")
+		fmt.Printf("%-15s: ", "First Name")
 		firstNameInput, err := h.reader.ReadString('\n')
 		firstName := strings.TrimSpace(firstNameInput)
 		if err != nil {
@@ -65,7 +63,7 @@ func (h *userHandler) Create() {
 		}
 
 		// ======== LASTNAME ========
-		fmt.Printf("%-10s: ", "Last Name")
+		fmt.Printf("%-15s: ", "Last Name")
 		lastNameInput, err := h.reader.ReadString('\n')
 		lastName := strings.TrimSpace(lastNameInput)
 		if err != nil {
@@ -78,12 +76,11 @@ func (h *userHandler) Create() {
 		var memberTierId int
 		for {
 			// TODO: PRINT TIERS DYNAMICALLY
-			fmt.Printf(`
-Tiers:
-1. Gold
-2. Silver
-3. Bronze	
-Select tier: `)
+			fmt.Printf(`Tiers:
+  1. Gold
+  2. Silver
+  3. Bronze	
+%-15s: `, "Select Tier")
 			tierInput, err := h.reader.ReadString('\n')
 			if err != nil {
 				fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
@@ -111,7 +108,7 @@ Select tier: `)
 		}
 
 		// ======== ADDRESS ========
-		fmt.Printf("%-10s: ", "Address")
+		fmt.Printf("%-15s: ", "Address")
 		addressInput, err := h.reader.ReadString('\n')
 		address := strings.TrimSpace(addressInput)
 		if err != nil {
@@ -128,8 +125,9 @@ Select tier: `)
 		}
 
 		fmt.Println("\n\033[0;32mNew Member added.\033[0m")
-		fmt.Println("Email:", email)
-		fmt.Println("Tier:", tier)
+		fmt.Printf("%-15s: %s %s\n", "Name", firstName, lastName)
+		fmt.Printf("%-15s: %s\n", "Email", email)
+		fmt.Printf("%-15s: %s\n", "Tier", tier)
 
 		anotherMember := false
 		for {
@@ -159,76 +157,33 @@ Select tier: `)
 
 func (h *userHandler) List() {
 	fmt.Println("\n\033[0;33m============= MEMBER LIST =============\033[0m")
-	users := []entity.UserDetails{
-		{
-			UserID:        1,
-			Email:         "john.doe@example.com",
-			UserType:      "Customer",
-			UserProfileID: 101,
-			MemberTierID:  1,
-			FirstName:     "John",
-			LastName:      "Doe",
-			Address:       "123 Main Street",
-			CreatedAt:     time.Date(2026, time.January, 15, 10, 30, 0, 0, time.UTC),
-			Status:        "Active",
-		},
-		{
-			UserID:        2,
-			Email:         "jane.smith@example.com",
-			UserType:      "Customer",
-			UserProfileID: 102,
-			MemberTierID:  2,
-			FirstName:     "Jane",
-			LastName:      "Smith",
-			Address:       "456 Oak Avenue",
-			CreatedAt:     time.Date(2026, time.March, 20, 14, 45, 0, 0, time.UTC),
-			Status:        "Active",
-		},
+	memberList, err := h.uc.MemberList()
+	if err != nil {
+		fmt.Println("\n\033[0;31m", err, "\033[0m")
+		return
 	}
 
-	tiers := []entity.Tier{
-		{
-			TierId:      1,
-			TierName:    "Gold",
-			MonthlyCost: 30.00,
-		},
-		{
-			TierId:      2,
-			TierName:    "Silver",
-			MonthlyCost: 20.00,
-		},
-		{
-			TierId:      3,
-			TierName:    "Bronze",
-			MonthlyCost: 10.00,
-		},
-	}
+	fmt.Printf("%-3s %-20s %-30s %-10s %-15s %-10s\n",
+		"No", "Name", "Email", "Tier", "Joined", "Status")
+	fmt.Println(strings.Repeat("-", 90))
 
-	tierMap := make(map[int]entity.Tier)
-
-	for _, tier := range tiers {
-		tierMap[tier.TierId] = tier
-	}
-
-	fmt.Printf("%-3s %-20s %-30s %-10s %-10s\n",
-		"No", "Name", "Email", "Tier", "Status")
-	fmt.Println(strings.Repeat("-", 80))
-
-	for i, user := range users {
-		tier := tierMap[user.MemberTierID]
-
-		name := user.FirstName + " " + user.LastName
-
-		fmt.Printf("%-3d %-20s %-30s %-10s %-10s\n",
+	for i, member := range memberList {
+		memberName := member.FirstName + " " + member.LastName
+		status := "Inactive"
+		if member.Status {
+			status = "Active"
+		}
+		fmt.Printf("%-3d %-20s %-30s %-10s %-15s %-10s\n",
 			i+1,
-			name,
-			user.Email,
-			tier.TierName,
-			user.Status,
+			memberName,
+			member.Email,
+			member.TierName,
+			member.CreatedAt.Format("2006-01-02"),
+			status,
 		)
 	}
-	fmt.Print("\nPress (Enter) to continue.")
-	_, err := h.reader.ReadString('\n')
+	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
+	_, err = h.reader.ReadString('\n')
 	if err != nil {
 		fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
 		return

@@ -41,3 +41,10 @@ func (u *userUsecase) Create(
 
 	return u.repo.Create(ctx, user, userProfile)
 }
+
+func (u *userUsecase) MemberList() ([]entity.UserDetail, error) {
+	ctx := context.TODO()
+	ctx, cancel := context.WithTimeout(ctx, setTimeout)
+	defer cancel()
+	return u.repo.MemberList(ctx)
+}
