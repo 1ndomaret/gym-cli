@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"gym-cli/internal/handler"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	app := handler.NewMenu()
+
+	app.Run()
 }
