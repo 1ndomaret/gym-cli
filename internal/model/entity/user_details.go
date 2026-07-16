@@ -3,12 +3,12 @@ package entity
 import "time"
 
 type UserDetails struct {
-	UserID   int
+	UserId   int
 	Email    string
 	UserType string
 
-	UserProfileID int
-	MemberTierID  int
+	UserProfileId int
+	MemberTierId  int
 	FirstName     string
 	LastName      string
 	Address       string

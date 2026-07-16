@@ -23,6 +23,10 @@ func main() {
 	uc := usecase.NewUserUsecase(ur)
 	uh := handler.NewUserHandler(uc, reader)
 
-	app := handler.NewMenu(uh, reader)
+	rr := dbrepo.NewReportRepository(db)
+	ruc := usecase.NewReportUsecase(rr)
+	rh := handler.NewReportHandler(ruc, reader)
+
+	app := handler.NewMenu(uh, rh, reader)
 	app.Run()
 }

@@ -9,14 +9,16 @@ import (
 )
 
 type menu struct {
-	userHandler domain.UserHandler
-	reader      *bufio.Reader
+	userHandler   domain.UserHandler
+	reportHandler domain.ReportHandler
+	reader        *bufio.Reader
 }
 
-func NewMenu(uh domain.UserHandler, reader *bufio.Reader) *menu {
+func NewMenu(uh domain.UserHandler, rh domain.ReportHandler, reader *bufio.Reader) *menu {
 	return &menu{
-		userHandler: uh,
-		reader:      reader,
+		userHandler:   uh,
+		reportHandler: rh,
+		reader:        reader,
 	}
 }
 
@@ -31,6 +33,7 @@ func (a *menu) Run() {
 2. View All Members
 3. Update Members
 4. Delete Member
+5. Monthly Income Report
 
 0. Exit Application
 
@@ -55,6 +58,8 @@ Choose Menu: `)
 			a.userHandler.Create()
 		case 2:
 			a.userHandler.List()
+		case 5:
+			a.reportHandler.MonthlyIncome()
 		case 0:
 			exitApp = true
 		default:

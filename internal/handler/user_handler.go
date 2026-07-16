@@ -161,11 +161,11 @@ func (h *userHandler) List() {
 	fmt.Println("\n\033[0;33m============= MEMBER LIST =============\033[0m")
 	users := []entity.UserDetails{
 		{
-			UserID:        1,
+			UserId:        1,
 			Email:         "john.doe@example.com",
 			UserType:      "Customer",
-			UserProfileID: 101,
-			MemberTierID:  1,
+			UserProfileId: 101,
+			MemberTierId:  1,
 			FirstName:     "John",
 			LastName:      "Doe",
 			Address:       "123 Main Street",
@@ -173,11 +173,11 @@ func (h *userHandler) List() {
 			Status:        "Active",
 		},
 		{
-			UserID:        2,
+			UserId:        2,
 			Email:         "jane.smith@example.com",
 			UserType:      "Customer",
-			UserProfileID: 102,
-			MemberTierID:  2,
+			UserProfileId: 102,
+			MemberTierId:  2,
 			FirstName:     "Jane",
 			LastName:      "Smith",
 			Address:       "456 Oak Avenue",
@@ -215,7 +215,7 @@ func (h *userHandler) List() {
 	fmt.Println(strings.Repeat("-", 80))
 
 	for i, user := range users {
-		tier := tierMap[user.MemberTierID]
+		tier := tierMap[user.MemberTierId]
 
 		name := user.FirstName + " " + user.LastName
 
