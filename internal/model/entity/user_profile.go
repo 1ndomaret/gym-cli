@@ -3,7 +3,7 @@ package entity
 import "time"
 
 type UserProfile struct {
-	UserProfileID int
+	UserProfileId int
 	UserId        int
 	MemberTierId  int
 	FirstName     string
