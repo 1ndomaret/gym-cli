@@ -1,11 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"gym-cli/internal/handler"
+	"os"
 )
 
 func main() {
-	app := handler.NewMenu()
+	reader := bufio.NewReader(os.Stdin)
+	uh := handler.NewUserHandler(reader)
+	app := handler.NewMenu(uh, reader)
 
 	app.Run()
 }
