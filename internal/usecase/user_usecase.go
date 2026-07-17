@@ -69,3 +69,8 @@ func (u *userUsecase) Login(email, password string) (*entity.User, error) {
 
 	return u.repo.Login(ctx, email, password)
 }
+
+func (u *userUsecase) UpdateMember(userId int, user *entity.UserDetail) error {
+
+	return nil
+}

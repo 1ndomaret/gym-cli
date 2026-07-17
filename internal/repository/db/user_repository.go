@@ -70,7 +70,7 @@ func (r *userRepository) Create(ctx context.Context, user *entity.User, userProf
 
 func (r *userRepository) MemberList(ctx context.Context) ([]entity.UserDetail, error) {
 	query := `
-		SELECT u.Email, up.FirstName, up.LastName, 
+		SELECT up.UserProfileId, u.UserId, u.Email, up.FirstName, up.LastName, 
 			t.TierName, up.Address, up.CreatedAt, up.Status
 			FROM UserProfiles up
 			JOIN Users u ON u.UserId = up.UserId
@@ -88,6 +88,8 @@ func (r *userRepository) MemberList(ctx context.Context) ([]entity.UserDetail, e
 	for rows.Next() {
 		var userDetail entity.UserDetail
 		err := rows.Scan(
+			&userDetail.UserProfileId,
+			&userDetail.UserId,
 			&userDetail.Email,
 			&userDetail.FirstName,
 			&userDetail.LastName,
@@ -183,4 +185,9 @@ func (r *userRepository) Login(ctx context.Context, email, password string) (*en
 	}
 
 	return &user, nil
+}
+
+func (r *userRepository) UpdateMember(ctx context.Context, id int, user *entity.UserDetail) error {
+
+	return nil
 }

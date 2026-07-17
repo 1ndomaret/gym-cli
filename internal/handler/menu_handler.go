@@ -27,7 +27,7 @@ func (a *menu) Run() {
 	for {
 		fmt.Println("\033[0;33m========================================")
 		fmt.Println("     GOLD'S GYM MEMBERSHIP SYSTEM")
-		fmt.Print("========================================\033[0m")
+		fmt.Print("========================================\n\033[0m")
 		fmt.Printf(`
 1. Login
 0. Exit Application
@@ -50,7 +50,8 @@ Choose Menu: `)
 		exitApp := false
 		switch menuSelection {
 		case 1:
-			a.login()
+			// a.login()
+			a.adminMenu(&entity.User{})
 		case 0:
 			exitApp = true
 		default:
@@ -126,6 +127,9 @@ Choose Menu: `)
 			a.userHandler.Create()
 		case 2:
 			a.userHandler.List()
+		case 3:
+			a.userHandler.Update()
+		case 4:
 		case 5:
 			a.reportHandler.MonthlyIncome()
 		case 6:
@@ -140,7 +144,7 @@ Choose Menu: `)
 		}
 
 		if exitApp {
-			fmt.Print("\033\n[0;33mLogging out.\n\n")
+			fmt.Print("\033\n[0;32mLogged out.\n\n")
 			break
 		}
 	}
@@ -174,7 +178,7 @@ Choose Menu: `)
 		}
 
 		if exitApp {
-			fmt.Print("\033\n[0;33mLogging out.\n\n")
+			fmt.Print("\033\n[0;32mLogged out.\n\n")
 			break
 		}
 	}

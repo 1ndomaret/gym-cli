@@ -24,7 +24,7 @@ func NewUserHandler(uc domain.UserUsecase, reader *bufio.Reader) domain.UserHand
 
 func (h *userHandler) Create() {
 	for {
-		fmt.Println("\n\033[0;33m========== ADD NEW MEMBER ==========\033[0m")
+		fmt.Println("\n\033[0;33m========== ADD NEW MEMBER ==========\n\033[0m")
 
 		// ======== EMAIL ========
 		fmt.Printf("%-15s: ", "Email")
@@ -157,7 +157,7 @@ func (h *userHandler) Create() {
 }
 
 func (h *userHandler) List() {
-	fmt.Println("\n\033[0;33m============= MEMBER LIST =============\033[0m")
+	fmt.Println("\n\033[0;33m============= MEMBER LIST =============\n\033[0m")
 	memberList, err := h.uc.MemberList()
 	if err != nil {
 		fmt.Println("\n\033[0;31m", err, "\033[0m")
@@ -220,4 +220,58 @@ func (h *userHandler) Login() (*entity.User, error) {
 	}
 
 	return user, nil
+}
+
+func (h *userHandler) Update() {
+	for {
+		fmt.Println("\n\033[0;33m============= UPDATE MEMBER =============\033\n[0m")
+		memberList, err := h.uc.MemberList()
+		if err != nil {
+			fmt.Println("\n\033[0;31m", err, "\033[0m")
+			return
+		}
+
+		fmt.Printf("%-3s %-20s %-30s %-10s %-15s %-10s\n",
+			"No", "Name", "Email", "Tier", "Joined", "Status")
+		fmt.Println(strings.Repeat("-", 90))
+
+		for i, member := range memberList {
+			memberName := member.FirstName + " " + member.LastName
+			status := "Inactive"
+			if member.Status {
+				status = "Active"
+			}
+			fmt.Printf("%-3d %-20s %-30s %-10s %-15s %-10s\n",
+				i+1,
+				memberName,
+				member.Email,
+				member.TierName,
+				member.CreatedAt.Format("2006-01-02"),
+				status,
+			)
+		}
+		fmt.Print("\nInput member number: ")
+
+		numberInput, err := h.reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+		memberNumber, err := strconv.Atoi(strings.TrimSpace(numberInput))
+		if err != nil {
+			fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
+			continue
+		}
+
+		memberNumber--
+		if memberNumber < 0 || memberNumber > len(memberList)-1 {
+			fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
+			continue
+		}
+
+		fmt.Println("")
+		fmt.Println(memberList[memberNumber])
+
+		break
+	}
 }

@@ -12,6 +12,7 @@ type UserRepository interface {
 	ViewSchedule(ctx context.Context, userID int) ([]entity.Event, error)
 	ViewPendingPayment(ctx context.Context, userID int) ([]entity.Invoice, error)
 	Login(ctx context.Context, email, password string) (*entity.User, error)
+	UpdateMember(ctx context.Context, userId int, user *entity.UserDetail) error
 }
 
 type UserUsecase interface {
@@ -24,10 +25,12 @@ type UserUsecase interface {
 	ViewSchedule(userID int) ([]entity.Event, error)
 	ViewPendingPayment(userID int) ([]entity.Invoice, error)
 	Login(email, password string) (*entity.User, error)
+	UpdateMember(userId int, user *entity.UserDetail) error
 }
 
 type UserHandler interface {
 	Create()
 	List()
 	Login() (*entity.User, error)
+	Update()
 }
