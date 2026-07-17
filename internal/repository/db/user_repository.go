@@ -6,6 +6,7 @@ import (
 	"errors"
 	"gym-cli/internal/domain"
 	"gym-cli/internal/model/entity"
+	"time"
 )
 
 type userRepository struct {
@@ -25,6 +26,7 @@ func (r *userRepository) Create(ctx context.Context, user *entity.User, userProf
 	}
 	defer tx.Rollback()
 
+	// ===== USER QUERY =====
 	userQuery := `
     INSERT INTO Users (Email, Password, Type) 
     	VALUES (?, ?, 'member')
@@ -41,11 +43,12 @@ func (r *userRepository) Create(ctx context.Context, user *entity.User, userProf
 
 	newUserID := int(lastInsertID)
 
+	// ===== PROFILE QUERY =====
 	profileQuery := `
 		INSERT INTO UserProfiles (UserId, MemberTierId, FirstName, LastName, Address)
 			VALUES (?, ?, ?, ?, ?);
 	`
-	_, err = tx.ExecContext(
+	profileResult, err := tx.ExecContext(
 		ctx,
 		profileQuery,
 		newUserID,
@@ -54,7 +57,39 @@ func (r *userRepository) Create(ctx context.Context, user *entity.User, userProf
 		userProfile.LastName,
 		userProfile.Address,
 	)
+	if err != nil {
+		return err
+	}
 
+	lastProfileID, err := profileResult.LastInsertId()
+	if err != nil {
+		return err
+	}
+	newUserProfileID := int(lastProfileID)
+
+	// ===== TIER QUERY =====
+	var monthlyCost float64
+	tierQuery := `SELECT MonthlyCost FROM Tiers WHERE TierId = ?`
+	err = tx.QueryRowContext(ctx, tierQuery, userProfile.MemberTierId).Scan(&monthlyCost)
+	if err != nil {
+		return err
+	}
+
+	// ===== INVOICE QUERY =====
+	dueDate := time.Now().AddDate(0, 0, 30).Format("2006-01-02")
+
+	invoiceQuery := `
+		INSERT INTO Invoices (UserProfileId, MemberTierId, Amount, DueDate, InvoiceStatus)
+		VALUES (?, ?, ?, ?, 'pending')
+	`
+	_, err = tx.ExecContext(
+		ctx,
+		invoiceQuery,
+		newUserProfileID,
+		userProfile.MemberTierId,
+		monthlyCost,
+		dueDate,
+	)
 	if err != nil {
 		return err
 	}
@@ -64,6 +99,7 @@ func (r *userRepository) Create(ctx context.Context, user *entity.User, userProf
 	}
 
 	user.UserId = newUserID
+	userProfile.UserProfileId = newUserProfileID
 
 	return nil
 }
