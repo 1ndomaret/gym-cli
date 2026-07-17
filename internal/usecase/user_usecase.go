@@ -17,7 +17,7 @@ func NewUserUsecase(repo domain.UserRepository) domain.UserUsecase {
 	}
 }
 
-var setTimeout = 3 * time.Millisecond
+var setTimeout = 3 * time.Second
 
 func (u *userUsecase) Create(
 	email, password, firstName, lastName, address string,
