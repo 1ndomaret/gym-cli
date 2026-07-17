@@ -455,3 +455,87 @@ func (h *userHandler) ViewPendingPayment(userID int) {
 	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 	h.reader.ReadString('\n')
 }
+
+func (h *userHandler) Delete() {
+	for {
+		fmt.Println("\n\033[0;33m========== DELETE MEMBER ==========\033[0m")
+		memberList, err := h.uc.MemberList()
+		if err != nil {
+			fmt.Printf("\n\033[0;31m%s\033[0m", err)
+			return
+		}
+		fmt.Printf("%-3s %-20s %-30s %-10s %-15s %-10s\n",
+			"No", "Name", "Email", "Tier", "Joined", "Status")
+		fmt.Println(strings.Repeat("-", 90))
+
+		for i, member := range memberList {
+			memberName := member.FirstName + " " + member.LastName
+			status := "Inactive"
+			if member.Status {
+				status = "Active"
+			}
+			fmt.Printf("\033[0;33m%-3d\033[0m %-20s %-30s %-10s %-15s %-10s\n",
+				i+1,
+				memberName,
+				member.Email,
+				member.TierName,
+				member.CreatedAt.Format("2006-01-02"),
+				status,
+			)
+		}
+		fmt.Println("\n\033[0;33m0\033[0m   Back to menu")
+
+		fmt.Print("\nInput member number: ")
+		numberInput, err := h.reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+		memberNumber, err := strconv.Atoi(strings.TrimSpace(numberInput))
+		if err != nil {
+			fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
+			continue
+		}
+		if memberNumber == 0 {
+			return
+		}
+
+		memberNumber--
+		if memberNumber < 0 || memberNumber > len(memberList)-1 {
+			fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
+			continue
+		}
+		selectedMember := memberList[memberNumber]
+		fmt.Printf("\nDeleting member: \033[0;33m%s %s\033[0m\n", selectedMember.FirstName, selectedMember.LastName)
+		proceed := false
+		for {
+			fmt.Print("\nWould you like to continue? (yes/no) ")
+			cont, err := h.reader.ReadString('\n')
+			cont = strings.ToLower(strings.TrimSpace(cont))
+			if err != nil {
+				fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+				continue
+			}
+
+			if strings.ToLower(cont) == "yes" {
+				proceed = true
+			} else if strings.ToLower(cont) != "no" {
+				fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
+				continue
+			}
+			break
+		}
+
+		if proceed {
+			err = h.uc.DeleteMember(selectedMember.UserId)
+			if err != nil {
+				fmt.Printf("\n\033[0;31m%s\033[0m", err)
+				return
+			}
+			fmt.Println("\n\033[0;32mMember Successfully Deleted.\033[0m")
+
+			break
+		}
+		continue
+	}
+}

@@ -135,7 +135,8 @@ Choose Menu: `, "\033[0;33m", "\033[0m")
 			a.userHandler.List()
 		case 3:
 			a.userHandler.Update()
-		// case 4:
+		case 4:
+			a.userHandler.Delete()
 		case 5:
 			a.reportHandler.MonthlyIncome()
 		case 6:

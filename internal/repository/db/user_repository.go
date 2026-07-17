@@ -260,3 +260,24 @@ func (r *userRepository) UpdateMember(ctx context.Context, id int, user *entity.
 
 	return nil
 }
+
+func (r *userRepository) DeleteMember(ctx context.Context, id int) error {
+	query := `
+		DELETE FROM Users 
+			WHERE UserId = ?
+	`
+	result, err := r.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return err
+	}
+
+	return nil
+}

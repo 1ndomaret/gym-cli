@@ -97,3 +97,11 @@ func (u *userUsecase) CheckEmailExists(email string) (bool, error) {
 
 	return false, nil
 }
+
+func (u *userUsecase) DeleteMember(userId int) error {
+	ctx := context.TODO()
+	ctx, cancel := context.WithTimeout(ctx, setTimeout)
+	defer cancel()
+
+	return u.repo.DeleteMember(ctx, userId)
+}

@@ -12,6 +12,7 @@ type UserRepository interface {
 	ViewSchedule(ctx context.Context, userID int) ([]entity.Event, error)
 	ViewPendingPayment(ctx context.Context, userID int) ([]entity.Invoice, error)
 	Login(ctx context.Context, email, password string) (*entity.User, error)
+	DeleteMember(ctx context.Context, userID int) error
 	UpdateMember(ctx context.Context, userId int, user *entity.UserDetail) error
 }
 
@@ -25,6 +26,7 @@ type UserUsecase interface {
 	ViewSchedule(userID int) ([]entity.Event, error)
 	ViewPendingPayment(userID int) ([]entity.Invoice, error)
 	Login(email, password string) (*entity.User, error)
+	DeleteMember(userId int) error
 	UpdateMember(userId int, user *entity.UserDetail) error
 	CheckEmailExists(email string) (bool, error)
 }
@@ -34,6 +36,7 @@ type UserHandler interface {
 	List()
 	Login() (*entity.User, error)
 	Update()
+	Delete()
 	ViewSchedule(userID int)
 	ViewPendingPayment(userID int)
 }
