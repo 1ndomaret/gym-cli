@@ -49,6 +49,19 @@ func (u *userUsecase) MemberList() ([]entity.UserDetail, error) {
 	return u.repo.MemberList(ctx)
 }
 
+// User VIEW
+func (u *userUsecase) ViewSchedule(userID int) ([]entity.Event, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	return u.repo.ViewSchedule(ctx, userID)
+}
+
+func (u *userUsecase) ViewPendingPayment(userID int) ([]entity.Invoice, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	return u.repo.ViewPendingPayment(ctx, userID)
+}
+
 func (u *userUsecase) Login(email, password string) (*entity.User, error) {
 	ctx := context.TODO()
 	ctx, cancel := context.WithTimeout(ctx, setTimeout)
