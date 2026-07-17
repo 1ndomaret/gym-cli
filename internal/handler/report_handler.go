@@ -27,7 +27,7 @@ func (h *reportHandler) MonthlyIncome() {
 
 	if len(report) == 0 {
 		fmt.Println("\nNo income recorded yet.")
-		fmt.Print("\nPress (Enter) to continue.")
+		fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 		h.reader.ReadString('\n')
 		return
 	}
@@ -59,7 +59,7 @@ func (h *reportHandler) MonthlyIncome() {
 	fmt.Printf("  %-21s %12.2f\n", "Total for "+currentMonth+":", monthTotal)
 	fmt.Printf("\n%-23s %12.2f\n", "GRAND TOTAL:", grandTotal)
 
-	fmt.Print("\nPress (Enter) to continue.")
+	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 	h.reader.ReadString('\n')
 }
 
@@ -82,7 +82,8 @@ func (h *reportHandler) MvpMembers() {
 		}
 	}
 
-	fmt.Print("\nPress (Enter) to continue.")
+	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
+
 	h.reader.ReadString('\n')
 }
 
@@ -97,7 +98,7 @@ func (h *reportHandler) MemberJoins() {
 
 	if len(joins) == 0 {
 		fmt.Println("\nNo members yet.")
-		fmt.Print("\nPress (Enter) to continue.")
+		fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 		h.reader.ReadString('\n')
 		return
 	}
@@ -126,7 +127,6 @@ func (h *reportHandler) MemberJoins() {
 	fmt.Printf("  %-25s %6d\n", "Total for "+currentMonth+":", monthCount)
 	fmt.Printf("\n%-27s %6d\n", "GRAND TOTAL:", grandTotal)
 
-	fmt.Print("\nPress (Enter) to continue.")
+	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 	h.reader.ReadString('\n')
 }
-

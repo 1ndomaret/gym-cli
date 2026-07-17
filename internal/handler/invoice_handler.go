@@ -44,6 +44,6 @@ func (h *invoiceHandler) UnpaidInvoices() {
 		fmt.Printf("%-31s %14.2f\n", "TOTAL VALUE:", total)
 	}
 
-	fmt.Print("\nPress (Enter) to continue.")
+	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 	h.reader.ReadString('\n')
 }

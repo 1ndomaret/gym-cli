@@ -412,7 +412,7 @@ func (h *userHandler) ViewSchedule(userID int) {
 		}
 	}
 
-	fmt.Print("\nPress (Enter) to continue.")
+	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 	h.reader.ReadString('\n')
 }
 
@@ -440,6 +440,6 @@ func (h *userHandler) ViewPendingPayment(userID int) {
 		fmt.Printf("%-10s %15.2f\n", "TOTAL", total)
 	}
 
-	fmt.Print("\nPress (Enter) to continue.")
+	fmt.Print("\n\033[0;32mPress (Enter) to continue.\033[0m")
 	h.reader.ReadString('\n')
 }
