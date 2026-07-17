@@ -106,3 +106,57 @@ func (r *userRepository) MemberList(ctx context.Context) ([]entity.UserDetail, e
 
 	return userDetails, nil
 }
+
+// USER VIEW
+func (r *userRepository) ViewSchedule(ctx context.Context, userID int) ([]entity.Event, error) {
+	query := `
+		SELECT e.EventId, e.EventName, e.MinTierRank, e.Schedule
+		FROM UserProfiles up
+		JOIN Tiers t ON t.TierId = up.MemberTierId
+		JOIN Events e ON e.MinTierRank <= t.TierRank
+		WHERE up.UserId = ?
+		  AND e.Schedule >= NOW()
+		ORDER BY e.Schedule
+	`
+	rows, err := r.db.QueryContext(ctx, query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var events []entity.Event
+	for rows.Next() {
+		var e entity.Event
+		if err := rows.Scan(&e.EventID, &e.EventName, &e.MinTierRank, &e.Schedule); err != nil {
+			return nil, err
+		}
+		events = append(events, e)
+	}
+	return events, rows.Err()
+}
+
+func (r *userRepository) ViewPendingPayment(ctx context.Context, userID int) ([]entity.Invoice, error) {
+	query := `
+		SELECT i.InvoiceId, i.Amount, i.DueDate, i.InvoiceStatus
+		FROM Invoices i
+		JOIN UserProfiles up ON up.UserProfileId = i.UserProfileId
+		WHERE up.UserId = ?
+		  AND i.InvoiceStatus IN ('pending', 'overdue')
+		ORDER BY i.DueDate
+	`
+	rows, err := r.db.QueryContext(ctx, query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var invoices []entity.Invoice
+	for rows.Next() {
+		var inv entity.Invoice
+		if err := rows.Scan(&inv.InvoiceID, &inv.Amount, &inv.DueDate, &inv.InvoiceStatus); err != nil {
+			return nil, err
+		}
+		invoices = append(invoices, inv)
+	}
+	return invoices, rows.Err()
+}

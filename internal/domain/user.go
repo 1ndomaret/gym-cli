@@ -8,6 +8,9 @@ import (
 type UserRepository interface {
 	Create(ctx context.Context, user *entity.User, userProfile *entity.UserProfile) error
 	MemberList(ctx context.Context) ([]entity.UserDetail, error)
+	//User View
+	ViewSchedule(ctx context.Context, userID int) ([]entity.Event, error)
+	ViewPendingPayment(ctx context.Context, userID int) ([]entity.Invoice, error)
 }
 
 type UserUsecase interface {
@@ -16,6 +19,9 @@ type UserUsecase interface {
 		memberTierId int,
 	) error
 	MemberList() ([]entity.UserDetail, error)
+	//UserView
+	ViewSchedule(userID int) ([]entity.Event, error)
+	ViewPendingPayment(userID int) ([]entity.Invoice, error)
 }
 
 type UserHandler interface {
