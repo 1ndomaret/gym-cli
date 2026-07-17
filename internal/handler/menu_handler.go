@@ -100,6 +100,7 @@ func (a *menu) adminMenu(user *entity.User) {
 %[1]s1%[2]s. Add New Member
 %[1]s2%[2]s. View All Members
 %[1]s3%[2]s. Update Members
+%[1]s4%[2]s. Delete Members
 
 (REPORT)
 %[1]s5%[2]s. Monthly Income Report
