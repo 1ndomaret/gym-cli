@@ -50,8 +50,8 @@ Choose Menu: `)
 		exitApp := false
 		switch menuSelection {
 		case 1:
-			// a.login()
-			a.adminMenu(&entity.User{})
+			a.login()
+			// a.adminMenu(&entity.User{})
 		case 0:
 			exitApp = true
 		default:
