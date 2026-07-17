@@ -155,10 +155,10 @@ func (a *menu) memberMenu(user *entity.User) {
 	for {
 		fmt.Println("\n\033[0;33m============= MEMBER MENU =============\033[0m")
 		fmt.Printf(`
-		1. View Upcoming Schedule
-		2. View Pending Payment
+1. View Upcoming Schedule
+2. View Pending Payment
 
-		0. Logout
+0. Logout
 
 Choose Menu: `)
 		menuInput, err := a.reader.ReadString('\n')
