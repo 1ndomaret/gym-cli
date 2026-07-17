@@ -37,10 +37,16 @@ func (h *userHandler) Create() {
 		email := strings.TrimSpace(emailInput)
 		addr, err := mail.ParseAddress(email)
 		if err != nil || addr.Address != email {
-			fmt.Println("\n\033[0;31mInvalid email format, please try again.\n\033[0m")
+			fmt.Println("\n\033[0;31mInvalid email format, please try again.\033[0m")
 			continue
-		} else if email == "test@mail.com" {
-			// TODO: ADD DUPLICATE CHECKER
+		}
+		isDuplicate, err := h.uc.CheckEmailExists(email)
+		if err != nil {
+			fmt.Println("\n\033[0;31m", err, "\033[0m")
+			continue
+		}
+
+		if isDuplicate {
 			fmt.Println("\n\033[0;31mEmail is taken, please enter another email.\033[0m")
 			continue
 		}
@@ -78,10 +84,10 @@ func (h *userHandler) Create() {
 		for {
 			// TODO: PRINT TIERS DYNAMICALLY
 			fmt.Printf(`Tiers:
-  1. Bronze
-  2. Silver
-  3. Gold	
-%-15s: `, "Select Tier")
+%[1]s1%[2]s. Bronze
+%[1]s2%[2]s. Silver
+%[1]s3%[2]s. Gold	
+%-15s: `, "\033[0;33m", "\033[0m", "Select Tier")
 			tierInput, err := h.reader.ReadString('\n')
 			if err != nil {
 				fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
@@ -124,7 +130,8 @@ func (h *userHandler) Create() {
 			fmt.Println("\n\033[0;31m", err, "\033[0m")
 			return
 		}
-		fmt.Println(strings.Repeat("-", 40))
+		fmt.Print("\n")
+		fmt.Print(strings.Repeat("-", 40))
 		fmt.Println("\n\033[0;32mNew Member added.\033[0m")
 		fmt.Printf("%-15s: %s %s\n", "Name", firstName, lastName)
 		fmt.Printf("%-15s: %s\n", "Email", email)
@@ -308,14 +315,19 @@ func (h *userHandler) Update() {
 
 			addr, err := mail.ParseAddress(newEmail)
 			if err != nil || addr.Address != newEmail {
-				fmt.Println("\n\033[0;31mInvalid email format, please try again.\n\033[0m")
+				fmt.Println("\n\033[0;31mInvalid email format, please try again.\033[0m")
 				continue
-			} else if newEmail == "test@mail.com" {
-				// TODO: ADD DUPLICATE CHECKER
-				fmt.Println("\n\033[0;31mEmail is taken, please enter another email.\n\033[0m")
+			}
+			isDuplicate, err := h.uc.CheckEmailExists(newEmail)
+			if err != nil {
+				fmt.Println("\n\033[0;31m", err, "\033[0m")
 				continue
 			}
 
+			if isDuplicate {
+				fmt.Println("\n\033[0;31mEmail is taken, please enter another email.\033[0m")
+				continue
+			}
 			break
 		}
 

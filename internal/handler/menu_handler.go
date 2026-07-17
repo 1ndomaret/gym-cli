@@ -33,10 +33,10 @@ func (a *menu) Run() {
 		fmt.Println("     GOLD'S GYM MEMBERSHIP SYSTEM")
 		fmt.Print("========================================\n\033[0m")
 		fmt.Printf(`
-1. Login
-0. Exit Application
+%[1]s1%[2]s. Login
+%[1]s0%[2]s. Exit Application
 
-Choose Menu: `)
+Choose Menu: `, "\033[0;33m", "\033[0m")
 
 		menuInput, err := a.reader.ReadString('\n')
 		if err != nil {
@@ -97,23 +97,22 @@ func (a *menu) adminMenu(user *entity.User) {
 		fmt.Println("\n\033[0;33m============= ADMIN MENU =============\033[0m")
 		fmt.Printf(`
 (MEMBER MANAGEMENT)
-1. Add New Member
-2. View All Members
-3. Update Members
-4. Delete Member
+%[1]s1%[2]s. Add New Member
+%[1]s2%[2]s. View All Members
+%[1]s3%[2]s. Update Members
 
 (REPORT)
-5. Monthly Income Report
-6. MVP Members (Top 10)
-7. Member Joins
+%[1]s5%[2]s. Monthly Income Report
+%[1]s6%[2]s. MVP Members (Top 10)
+%[1]s7%[2]s. Member Joins
 
 (BILLING)
-8. Unpaid Invoices
-9. Create Payment
+%[1]s8%[2]s. Unpaid Invoices
+%[1]s9%[2]s. Create Payment
 
-0. Logout
+%[1]s0%[2]s. Logout
 
-Choose Menu: `)
+Choose Menu: `, "\033[0;33m", "\033[0m")
 
 		menuInput, err := a.reader.ReadString('\n')
 		if err != nil {
@@ -136,7 +135,7 @@ Choose Menu: `)
 			a.userHandler.List()
 		case 3:
 			a.userHandler.Update()
-		case 4:
+		// case 4:
 		case 5:
 			a.reportHandler.MonthlyIncome()
 		case 6:
@@ -166,12 +165,12 @@ func (a *menu) memberMenu(user *entity.User) {
 	for {
 		fmt.Println("\n\033[0;33m============= MEMBER MENU =============\033[0m")
 		fmt.Printf(`
-1. View Upcoming Schedule
-2. View Pending Payment
+%[1]s1%[2]s. View Upcoming Schedule
+%[1]s2%[2]s. View Pending Payment
 
-0. Logout
+%[1]s0%[2]s. Logout
 
-Choose Menu: `)
+Choose Menu: `, "\033[0;33m", "\033[0m")
 		menuInput, err := a.reader.ReadString('\n')
 		if err != nil {
 			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)

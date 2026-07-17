@@ -26,6 +26,7 @@ type UserUsecase interface {
 	ViewPendingPayment(userID int) ([]entity.Invoice, error)
 	Login(email, password string) (*entity.User, error)
 	UpdateMember(userId int, user *entity.UserDetail) error
+	CheckEmailExists(email string) (bool, error)
 }
 
 type UserHandler interface {

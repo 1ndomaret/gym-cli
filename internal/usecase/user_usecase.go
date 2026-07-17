@@ -4,6 +4,7 @@ import (
 	"context"
 	"gym-cli/internal/domain"
 	"gym-cli/internal/model/entity"
+	"strings"
 	"time"
 )
 
@@ -76,4 +77,23 @@ func (u *userUsecase) UpdateMember(userId int, user *entity.UserDetail) error {
 	defer cancel()
 
 	return u.repo.UpdateMember(ctx, userId, user)
+}
+
+func (u *userUsecase) CheckEmailExists(email string) (bool, error) {
+	members, err := u.MemberList()
+	if err != nil {
+		return false, err
+	}
+
+	if strings.EqualFold(email, "admin@example.com") {
+		return true, nil
+	}
+
+	for _, member := range members {
+		if strings.EqualFold(member.Email, email) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
