@@ -20,8 +20,8 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 
 	ur := dbrepo.NewUserRepository(db)
-	uc := usecase.NewUserUsecase(ur)
-	uh := handler.NewUserHandler(uc, reader)
+	uuc := usecase.NewUserUsecase(ur)
+	uh := handler.NewUserHandler(uuc, reader)
 
 	app := handler.NewMenu(uh, reader)
 	app.Run()

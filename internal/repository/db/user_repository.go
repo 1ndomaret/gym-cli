@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"gym-cli/internal/domain"
 	"gym-cli/internal/model/entity"
 )
@@ -105,4 +106,27 @@ func (r *userRepository) MemberList(ctx context.Context) ([]entity.UserDetail, e
 	}
 
 	return userDetails, nil
+}
+
+func (r *userRepository) Login(ctx context.Context, email, password string) (*entity.User, error) {
+	query := `
+		SELECT UserId, Email, Type FROM Users
+			WHERE Email = ? AND Password = ?
+	`
+
+	var user entity.User
+	err := r.db.QueryRow(query, email, password).Scan(
+		&user.UserId,
+		&user.Email,
+		&user.UserType,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.New("The email or password is incorrect.")
+		}
+		return nil, err
+	}
+
+	return &user, nil
 }

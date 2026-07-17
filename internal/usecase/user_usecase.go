@@ -48,3 +48,11 @@ func (u *userUsecase) MemberList() ([]entity.UserDetail, error) {
 	defer cancel()
 	return u.repo.MemberList(ctx)
 }
+
+func (u *userUsecase) Login(email, password string) (*entity.User, error) {
+	ctx := context.TODO()
+	ctx, cancel := context.WithTimeout(ctx, setTimeout)
+	defer cancel()
+
+	return u.repo.Login(ctx, email, password)
+}
