@@ -33,7 +33,7 @@ func main() {
 
 	pr := dbrepo.NewPaymentRepository(db)
 	puc := usecase.NewPaymentUsecase(pr)
-	ph := handler.NewPaymentHandler(puc, reader)
+	ph := handler.NewPaymentHandler(puc, iuc, reader)
 
 	app := handler.NewMenu(uh, rh, ih, ph, reader)
 	app.Run()

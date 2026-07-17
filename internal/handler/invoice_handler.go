@@ -17,7 +17,7 @@ func NewInvoiceHandler(uc domain.InvoiceUsecase, reader *bufio.Reader) domain.In
 }
 
 func (h *invoiceHandler) UnpaidInvoices() {
-	fmt.Println("\n\033[0;33m========== UNPAID INVOICES ==========\033[0m")
+	fmt.Println("\n\033[0;33m========== CREATE PAYMENT ==========\033[0m")
 
 	invoices, err := h.uc.UnpaidInvoices()
 	if err != nil {
@@ -28,7 +28,7 @@ func (h *invoiceHandler) UnpaidInvoices() {
 	if len(invoices) == 0 {
 		fmt.Println("\nNo unpaid invoices — everyone is paid up.")
 	} else {
-		fmt.Printf("%-8s %-22s %14s  %-12s %s\n", "Invoice", "Member", "Amount", "Due Date", "Status")
+		fmt.Printf("%-8s %-22s %14s  %-12s %s\n", "InvoiceId", "Member", "Amount", "Due Date", "Status")
 		fmt.Println(strings.Repeat("-", 70))
 		var total float64
 		for _, inv := range invoices {

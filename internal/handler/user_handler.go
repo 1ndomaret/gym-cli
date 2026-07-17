@@ -124,12 +124,12 @@ func (h *userHandler) Create() {
 			fmt.Println("\n\033[0;31m", err, "\033[0m")
 			return
 		}
-
+		fmt.Println(strings.Repeat("-", 40))
 		fmt.Println("\n\033[0;32mNew Member added.\033[0m")
 		fmt.Printf("%-15s: %s %s\n", "Name", firstName, lastName)
 		fmt.Printf("%-15s: %s\n", "Email", email)
 		fmt.Printf("%-15s: %s\n", "Tier", tier)
-
+		fmt.Println(strings.Repeat("-", 40))
 		anotherMember := false
 		for {
 			fmt.Print("\nWould you like to add another member? (yes/no) ")
@@ -242,7 +242,7 @@ func (h *userHandler) Update() {
 			if member.Status {
 				status = "Active"
 			}
-			fmt.Printf("%-3d %-20s %-30s %-10s %-15s %-10s\n",
+			fmt.Printf("\033[0;33m%-3d\033[0m %-20s %-30s %-10s %-15s %-10s\n",
 				i+1,
 				memberName,
 				member.Email,
@@ -251,7 +251,7 @@ func (h *userHandler) Update() {
 				status,
 			)
 		}
-		fmt.Println("\n0. Back to menu ")
+		fmt.Println("\n\033[0;33m0\033[0m   Back to menu")
 
 		fmt.Print("\nInput member number: ")
 

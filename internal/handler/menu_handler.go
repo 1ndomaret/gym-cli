@@ -109,6 +109,7 @@ func (a *menu) adminMenu(user *entity.User) {
 
 (BILLING)
 8. Unpaid Invoices
+9. Create Payment
 
 0. Logout
 
@@ -144,6 +145,8 @@ Choose Menu: `)
 			a.reportHandler.MemberJoins()
 		case 8:
 			a.invoiceHandler.UnpaidInvoices()
+		case 9:
+			a.paymentHandler.Create()
 		case 0:
 			exitApp = true
 		default:
