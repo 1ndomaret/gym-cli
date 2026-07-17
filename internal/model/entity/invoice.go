@@ -10,3 +10,12 @@ type Invoice struct {
 	DueDate       time.Time
 	InvoiceStatus string
 }
+
+type UnpaidInvoice struct {
+	InvoiceID     int
+	FirstName     string
+	LastName      string
+	Amount        float64
+	DueDate       time.Time
+	InvoiceStatus string
+}

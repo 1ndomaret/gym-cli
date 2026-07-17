@@ -107,6 +107,9 @@ func (a *menu) adminMenu(user *entity.User) {
 6. MVP Members (Top 10)
 7. Member Joins
 
+(BILLING)
+8. Unpaid Invoices
+
 0. Logout
 
 Choose Menu: `)
@@ -139,6 +142,8 @@ Choose Menu: `)
 			a.reportHandler.MvpMembers()
 		case 7:
 			a.reportHandler.MemberJoins()
+		case 8:
+			a.invoiceHandler.UnpaidInvoices()
 		case 0:
 			exitApp = true
 		default:

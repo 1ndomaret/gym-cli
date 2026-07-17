@@ -129,3 +129,4 @@ func (h *reportHandler) MemberJoins() {
 	fmt.Print("\nPress (Enter) to continue.")
 	h.reader.ReadString('\n')
 }
+
