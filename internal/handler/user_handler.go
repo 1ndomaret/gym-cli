@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"gym-cli/internal/domain"
+	"gym-cli/internal/model/entity"
 	"net/mail"
 	"strconv"
 	"strings"
@@ -189,4 +190,34 @@ func (h *userHandler) List() {
 		return
 	}
 	fmt.Print("\n")
+}
+
+func (h *userHandler) Login() (*entity.User, error) {
+	var email string
+	var password string
+
+	for {
+		fmt.Printf("%-15s: ", "Enter Email")
+		emailInput, err := h.reader.ReadString('\n')
+		email = strings.TrimSpace(emailInput)
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+
+		fmt.Printf("%-15s: ", "Enter Password")
+		passwordInput, err := h.reader.ReadString('\n')
+		password = strings.TrimSpace(passwordInput)
+		if err != nil {
+			fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+			continue
+		}
+		break
+	}
+	user, err := h.uc.Login(email, password)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }
