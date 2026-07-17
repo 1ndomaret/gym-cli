@@ -28,7 +28,7 @@ func (h *invoiceHandler) UnpaidInvoices() {
 	if len(invoices) == 0 {
 		fmt.Println("\nNo unpaid invoices — everyone is paid up.")
 	} else {
-		fmt.Printf("%-8s %-22s %14s  %-12s %s\n", "InvoiceId", "Member", "Amount", "Due Date", "Status")
+		fmt.Printf("\n%-8s %-22s %14s  %-12s %s\n", "InvoiceId", "Member", "Amount", "Due Date", "Status")
 		fmt.Println(strings.Repeat("-", 70))
 		var total float64
 		for _, inv := range invoices {

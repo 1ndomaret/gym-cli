@@ -417,7 +417,7 @@ func (h *userHandler) ViewSchedule(userID int) {
 	if len(events) == 0 {
 		fmt.Println("\nNo upcoming events available for your tier.")
 	} else {
-		fmt.Printf("%-20s %s\n", "When", "Event")
+		fmt.Printf("\n%-20s %s\n", "When", "Event")
 		fmt.Println(strings.Repeat("-", 50))
 		for _, e := range events {
 			fmt.Printf("%-20s %s\n", e.Schedule.Format("2006-01-02 15:04"), e.EventName)
@@ -440,7 +440,7 @@ func (h *userHandler) ViewPendingPayment(userID int) {
 	if len(invoices) == 0 {
 		fmt.Println("\nYou have no pending payments.")
 	} else {
-		fmt.Printf("%-10s %15s  %-12s %s\n", "Invoice", "Amount", "Due Date", "Status")
+		fmt.Printf("\n%-10s %15s  %-12s %s\n", "Invoice", "Amount", "Due Date", "Status")
 		fmt.Println(strings.Repeat("-", 52))
 		var total float64
 		for _, inv := range invoices {
