@@ -1,6 +1,6 @@
 package entity
 
-type Tier struct {
+type Tiers struct {
 	TierId      int
 	TierName    string
 	MonthlyCost int

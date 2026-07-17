@@ -33,8 +33,12 @@ func (a *menu) Run() {
 2. View All Members
 3. Update Members
 4. Delete Member
-5. Monthly Income Report
 
+
+(REPORT)
+5. Monthly Income Report
+6. MVP Members (Top 10)
+7. Member Joins
 0. Exit Application
 
 Choose Menu: `)
@@ -60,6 +64,12 @@ Choose Menu: `)
 			a.userHandler.List()
 		case 5:
 			a.reportHandler.MonthlyIncome()
+
+		case 6:
+			a.reportHandler.MvpMembers()
+		case 7:
+			a.reportHandler.MemberJoins()
+
 		case 0:
 			exitApp = true
 		default:

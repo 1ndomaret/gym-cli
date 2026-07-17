@@ -1,0 +1,10 @@
+# Local environment variables
+.env
+
+# Compiled binaries
+*.exe
+gym-cli
+
+# Test & coverage output
+*.test
+*.out
