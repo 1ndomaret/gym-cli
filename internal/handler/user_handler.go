@@ -221,3 +221,55 @@ func (h *userHandler) Login() (*entity.User, error) {
 
 	return user, nil
 }
+
+// User View
+func (h *userHandler) ViewSchedule(userID int) {
+	fmt.Println("\n\033[0;33m========== UPCOMING SCHEDULE ==========\033[0m")
+
+	events, err := h.uc.ViewSchedule(userID)
+	if err != nil {
+		fmt.Println("\n\033[0;31mFailed to load schedule:", err, "\033[0m")
+		return
+	}
+
+	if len(events) == 0 {
+		fmt.Println("\nNo upcoming events available for your tier.")
+	} else {
+		fmt.Printf("%-20s %s\n", "When", "Event")
+		fmt.Println(strings.Repeat("-", 50))
+		for _, e := range events {
+			fmt.Printf("%-20s %s\n", e.Schedule.Format("2006-01-02 15:04"), e.EventName)
+		}
+	}
+
+	fmt.Print("\nPress (Enter) to continue.")
+	h.reader.ReadString('\n')
+}
+
+func (h *userHandler) ViewPendingPayment(userID int) {
+	fmt.Println("\n\033[0;33m========== PENDING PAYMENTS ==========\033[0m")
+
+	invoices, err := h.uc.ViewPendingPayment(userID)
+	if err != nil {
+		fmt.Println("\n\033[0;31mFailed to load payments:", err, "\033[0m")
+		return
+	}
+
+	if len(invoices) == 0 {
+		fmt.Println("\nYou have no pending payments.")
+	} else {
+		fmt.Printf("%-10s %15s  %-12s %s\n", "Invoice", "Amount", "Due Date", "Status")
+		fmt.Println(strings.Repeat("-", 52))
+		var total float64
+		for _, inv := range invoices {
+			fmt.Printf("#%-9d %15.2f  %-12s %s\n",
+				inv.InvoiceID, inv.Amount, inv.DueDate.Format("2006-01-02"), inv.InvoiceStatus)
+			total += inv.Amount
+		}
+		fmt.Println(strings.Repeat("-", 52))
+		fmt.Printf("%-10s %15.2f\n", "TOTAL", total)
+	}
+
+	fmt.Print("\nPress (Enter) to continue.")
+	h.reader.ReadString('\n')
+}
