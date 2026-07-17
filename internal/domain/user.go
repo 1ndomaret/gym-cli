@@ -33,4 +33,6 @@ type UserHandler interface {
 	List()
 	Login() (*entity.User, error)
 	Update()
+	ViewSchedule(userID int)
+	ViewPendingPayment(userID int)
 }

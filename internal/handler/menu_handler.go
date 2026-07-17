@@ -154,7 +154,11 @@ func (a *menu) memberMenu(user *entity.User) {
 	fmt.Printf("\n\033[0;32mLogged in as %s.\n\033[0m", user.Email)
 	for {
 		fmt.Println("\n\033[0;33m============= MEMBER MENU =============\033[0m")
-		fmt.Printf(`0. Logout
+		fmt.Printf(`
+		1. View Upcoming Schedule
+		2. View Pending Payment
+
+		0. Logout
 
 Choose Menu: `)
 		menuInput, err := a.reader.ReadString('\n')
@@ -170,6 +174,10 @@ Choose Menu: `)
 		}
 		exitApp := false
 		switch menuSelection {
+		case 1:
+			a.userHandler.ViewSchedule(user.UserId)
+		case 2:
+			a.userHandler.ViewPendingPayment(user.UserId)
 		case 0:
 			exitApp = true
 		default:
