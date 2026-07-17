@@ -37,7 +37,7 @@ func (h *userHandler) Create() {
 		email := strings.TrimSpace(emailInput)
 		addr, err := mail.ParseAddress(email)
 		if err != nil || addr.Address != email {
-			fmt.Println("\n\033[0;31mInvalid email format, please try again.\033[0m")
+			fmt.Println("\n\033[0;31mInvalid email format, please try again.\n\033[0m")
 			continue
 		} else if email == "test@mail.com" {
 			// TODO: ADD DUPLICATE CHECKER
@@ -143,7 +143,7 @@ func (h *userHandler) Create() {
 			if strings.ToLower(cont) == "yes" {
 				anotherMember = true
 			} else if strings.ToLower(cont) != "no" {
-				fmt.Println("\n\033[0;31mInvalid input, try again.\033[0m")
+				fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
 				continue
 			}
 			break
@@ -160,7 +160,7 @@ func (h *userHandler) List() {
 	fmt.Println("\n\033[0;33m============= MEMBER LIST =============\n\033[0m")
 	memberList, err := h.uc.MemberList()
 	if err != nil {
-		fmt.Println("\n\033[0;31m", err, "\033[0m")
+		fmt.Printf("\n\033[0;31m%s\033[0m", err)
 		return
 	}
 
@@ -197,7 +197,8 @@ func (h *userHandler) Login() (*entity.User, error) {
 	var password string
 
 	for {
-		fmt.Printf("%-15s: ", "Enter Email")
+		fmt.Print("\n\033[0;33mPlease Enter your Credentials\n\033[0m")
+		fmt.Printf("%-10s: ", "Email")
 		emailInput, err := h.reader.ReadString('\n')
 		email = strings.TrimSpace(emailInput)
 		if err != nil {
@@ -205,7 +206,7 @@ func (h *userHandler) Login() (*entity.User, error) {
 			continue
 		}
 
-		fmt.Printf("%-15s: ", "Enter Password")
+		fmt.Printf("%-10s: ", "Password")
 		passwordInput, err := h.reader.ReadString('\n')
 		password = strings.TrimSpace(passwordInput)
 		if err != nil {
@@ -227,7 +228,7 @@ func (h *userHandler) Update() {
 		fmt.Println("\n\033[0;33m============= UPDATE MEMBER =============\033\n[0m")
 		memberList, err := h.uc.MemberList()
 		if err != nil {
-			fmt.Println("\n\033[0;31m", err, "\033[0m")
+			fmt.Printf("\n\033[0;31m%s\033[0m", err)
 			return
 		}
 
@@ -250,6 +251,8 @@ func (h *userHandler) Update() {
 				status,
 			)
 		}
+		fmt.Println("\n0. Back to menu ")
+
 		fmt.Print("\nInput member number: ")
 
 		numberInput, err := h.reader.ReadString('\n')
@@ -262,6 +265,9 @@ func (h *userHandler) Update() {
 			fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
 			continue
 		}
+		if memberNumber == 0 {
+			return
+		}
 
 		memberNumber--
 		if memberNumber < 0 || memberNumber > len(memberList)-1 {
@@ -269,9 +275,119 @@ func (h *userHandler) Update() {
 			continue
 		}
 
-		fmt.Println("")
-		fmt.Println(memberList[memberNumber])
+		selectedMember := memberList[memberNumber]
+		fmt.Printf("\nUpdating Details for: \033[0;33m%s %s\033[0m\n", selectedMember.FirstName, selectedMember.LastName)
+		fmt.Println("\033[0;32mLeave empty and press (Enter) to keep the current value.\033[0m")
+		fmt.Println(strings.Repeat("-", 50))
 
+		// ======== FIRST NAME ========
+		fmt.Printf("First Name [%s]: ", selectedMember.FirstName)
+		newFirstName, _ := h.reader.ReadString('\n')
+		newFirstName = strings.TrimSpace(newFirstName)
+		if newFirstName == "" {
+			newFirstName = selectedMember.FirstName
+		}
+
+		// ======== LAST NAME ========
+		fmt.Printf("Last Name [%s]: ", selectedMember.LastName)
+		newLastName, _ := h.reader.ReadString('\n')
+		newLastName = strings.TrimSpace(newLastName)
+		if newLastName == "" {
+			newLastName = selectedMember.LastName
+		}
+
+		// ======== EMAIL ========
+		var newEmail string
+		for {
+			fmt.Printf("Email [%s]: ", selectedMember.Email)
+			newEmail, _ = h.reader.ReadString('\n')
+			newEmail = strings.TrimSpace(newEmail)
+			if newEmail == "" {
+				newEmail = selectedMember.Email
+			}
+
+			addr, err := mail.ParseAddress(newEmail)
+			if err != nil || addr.Address != newEmail {
+				fmt.Println("\n\033[0;31mInvalid email format, please try again.\n\033[0m")
+				continue
+			} else if newEmail == "test@mail.com" {
+				// TODO: ADD DUPLICATE CHECKER
+				fmt.Println("\n\033[0;31mEmail is taken, please enter another email.\n\033[0m")
+				continue
+			}
+
+			break
+		}
+
+		// ======== ADDRESS ========
+		fmt.Printf("Address [%s]: ", selectedMember.Address)
+		newAddress, _ := h.reader.ReadString('\n')
+		newAddress = strings.TrimSpace(newAddress)
+		if newAddress == "" {
+			newAddress = selectedMember.Address
+		}
+
+		// ======== STATUS ========
+		currentStatusStr := "Active"
+		if !selectedMember.Status {
+			currentStatusStr = "Inactive"
+		}
+		newStatus := selectedMember.Status
+
+		for {
+			fmt.Printf("Status (active/inactive) [%s]: ", currentStatusStr)
+			newStatusInput, _ := h.reader.ReadString('\n')
+			newStatusInput = strings.ToLower(strings.TrimSpace(newStatusInput))
+
+			switch newStatusInput {
+			case "active":
+				newStatus = true
+			case "inactive":
+				newStatus = false
+			case "":
+			default:
+				fmt.Println("\n\033[0;31mInvalid input, please try again.\n\033[0m")
+				continue
+			}
+			break
+		}
+
+		selectedMember.FirstName = newFirstName
+		selectedMember.LastName = newLastName
+		selectedMember.Email = newEmail
+		selectedMember.Status = newStatus
+		selectedMember.Address = newAddress
+
+		err = h.uc.UpdateMember(selectedMember.UserId, &selectedMember)
+		if err != nil {
+			fmt.Printf("\n\033[0;31m%s\033[0m", err)
+			return
+		}
+
+		fmt.Println("\n\033[0;32mMember Successfully Updated.\033[0m")
+
+		anotherMember := false
+		for {
+			fmt.Print("\nWould you like to update another member? (yes/no) ")
+			cont, err := h.reader.ReadString('\n')
+			cont = strings.ToLower(strings.TrimSpace(cont))
+			if err != nil {
+				fmt.Println("\n\033[0;31mUnexpected error occured when reading input.\033[0m", err)
+				continue
+			}
+
+			if strings.ToLower(cont) == "yes" {
+				anotherMember = true
+			} else if strings.ToLower(cont) != "no" {
+				fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
+				continue
+			}
+			break
+		}
+		if anotherMember {
+			continue
+		}
+		fmt.Print("\n")
 		break
 	}
 }

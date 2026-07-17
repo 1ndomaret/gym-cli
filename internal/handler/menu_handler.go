@@ -25,7 +25,7 @@ func NewMenu(uh domain.UserHandler, rh domain.ReportHandler, reader *bufio.Reade
 
 func (a *menu) Run() {
 	for {
-		fmt.Println("\033[0;33m========================================")
+		fmt.Println("\n\033[0;33m========================================")
 		fmt.Println("     GOLD'S GYM MEMBERSHIP SYSTEM")
 		fmt.Print("========================================\n\033[0m")
 		fmt.Printf(`
@@ -70,8 +70,7 @@ func (a *menu) login() {
 	for {
 		user, err := a.userHandler.Login()
 		if err != nil {
-			fmt.Println("Here3")
-			fmt.Println("\n\033[0;31m", err, "\n\033[0m")
+			fmt.Printf("\n\033[0;31m%s\n\033[0m", err)
 			continue
 		}
 
@@ -81,7 +80,7 @@ func (a *menu) login() {
 		case "member":
 			a.memberMenu(user)
 		default:
-			fmt.Println("\n\033[0;31m Unknown user type.\033[0m")
+			fmt.Println("\n\033[0;31m Unknown user type.\n\033[0m")
 			continue
 		}
 		break

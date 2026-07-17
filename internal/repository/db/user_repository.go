@@ -188,6 +188,39 @@ func (r *userRepository) Login(ctx context.Context, email, password string) (*en
 }
 
 func (r *userRepository) UpdateMember(ctx context.Context, id int, user *entity.UserDetail) error {
+	tx, err := r.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	queryUsers := `
+		UPDATE Users 
+			SET Email = ? 
+			WHERE UserId = ?
+	`
+	_, err = tx.ExecContext(ctx, queryUsers, user.Email, id)
+	if err != nil {
+		return err
+	}
+	queryProfiles := `
+		UPDATE UserProfiles 
+			SET FirstName = ?, LastName = ?, Status = ? 
+			WHERE UserProfileId = ?
+	`
+	_, err = tx.ExecContext(ctx, queryProfiles,
+		user.FirstName,
+		user.LastName,
+		user.Status,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+
+	if err = tx.Commit(); err != nil {
+		return err
+	}
 
 	return nil
 }

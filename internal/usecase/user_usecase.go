@@ -71,6 +71,9 @@ func (u *userUsecase) Login(email, password string) (*entity.User, error) {
 }
 
 func (u *userUsecase) UpdateMember(userId int, user *entity.UserDetail) error {
+	ctx := context.TODO()
+	ctx, cancel := context.WithTimeout(ctx, setTimeout)
+	defer cancel()
 
-	return nil
+	return u.repo.UpdateMember(ctx, userId, user)
 }
