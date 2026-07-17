@@ -152,7 +152,7 @@ Choose Menu: `)
 		}
 
 		if exitApp {
-			fmt.Print("\033\n[0;32mLogged out.\n\n")
+			fmt.Print("\033\n[0;32mLogged out.\n")
 			break
 		}
 	}
@@ -194,7 +194,7 @@ Choose Menu: `)
 		}
 
 		if exitApp {
-			fmt.Print("\033\n[0;32mLogged out.\n\n")
+			fmt.Print("\033\n[0;32mLogged out.\n")
 			break
 		}
 	}

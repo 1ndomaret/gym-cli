@@ -78,9 +78,9 @@ func (h *userHandler) Create() {
 		for {
 			// TODO: PRINT TIERS DYNAMICALLY
 			fmt.Printf(`Tiers:
-  1. Gold
+  1. Bronze
   2. Silver
-  3. Bronze	
+  3. Gold	
 %-15s: `, "Select Tier")
 			tierInput, err := h.reader.ReadString('\n')
 			if err != nil {
@@ -96,11 +96,11 @@ func (h *userHandler) Create() {
 
 			switch memberTierId {
 			case 1:
-				tier = "Gold"
+				tier = "Bronze"
 			case 2:
 				tier = "Silver"
 			case 3:
-				tier = "Bronze"
+				tier = "Gold"
 			default:
 				fmt.Println("\n\033[0;31mInvalid input, try again.\n\033[0m")
 				continue
