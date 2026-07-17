@@ -27,6 +27,14 @@ func main() {
 	ruc := usecase.NewReportUsecase(rr)
 	rh := handler.NewReportHandler(ruc, reader)
 
-	app := handler.NewMenu(uh, rh, reader)
+	ir := dbrepo.NewInvoiceRepository(db)
+	iuc := usecase.NewInvoiceUsecase(ir)
+	ih := handler.NewInvoiceHandler(iuc, reader)
+
+	pr := dbrepo.NewPaymentRepository(db)
+	puc := usecase.NewPaymentUsecase(pr)
+	ph := handler.NewPaymentHandler(puc, reader)
+
+	app := handler.NewMenu(uh, rh, ih, ph, reader)
 	app.Run()
 }

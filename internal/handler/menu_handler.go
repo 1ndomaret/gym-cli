@@ -10,16 +10,20 @@ import (
 )
 
 type menu struct {
-	userHandler   domain.UserHandler
-	reportHandler domain.ReportHandler
-	reader        *bufio.Reader
+	userHandler    domain.UserHandler
+	reportHandler  domain.ReportHandler
+	invoiceHandler domain.InvoiceHandler
+	paymentHandler domain.PaymentHandler
+	reader         *bufio.Reader
 }
 
-func NewMenu(uh domain.UserHandler, rh domain.ReportHandler, reader *bufio.Reader) *menu {
+func NewMenu(uh domain.UserHandler, rh domain.ReportHandler, ih domain.InvoiceHandler, ph domain.PaymentHandler, reader *bufio.Reader) *menu {
 	return &menu{
-		userHandler:   uh,
-		reportHandler: rh,
-		reader:        reader,
+		userHandler:    uh,
+		reportHandler:  rh,
+		invoiceHandler: ih,
+		paymentHandler: ph,
+		reader:         reader,
 	}
 }
 
